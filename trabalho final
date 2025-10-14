@@ -1,0 +1,37 @@
+class SistemaEventos:
+    def __init__(self):
+        self.eventos = []
+        self.participantes = []
+        self.emails_inscritos = set()
+
+    def adicionar_evento(self, evento):
+        self.eventos.append(evento)
+
+    def listar_eventos(self):
+        for evento in self.eventos:
+            print(f"{evento.nome} - {evento.data} - {evento.local} - Capacidade: {evento.capacidade_max}")
+
+    def inscrever_participante(self, nome, email, nome_evento):
+        # Verifica se o e-mail já está cadastrado
+        if email in self.emails_inscritos:
+            print(f"Erro: O e-mail '{email}' já está inscrito em um evento.")
+            return False
+
+        # Procura o evento
+        evento = next((e for e in self.eventos if e.nome == nome_evento), None)
+        if evento is None:
+            print(f"Erro: Evento '{nome_evento}' não encontrado.")
+            return False
+
+        # Verifica se há vagas
+        if len(evento.participantes) >= evento.capacidade_max:
+            print(f"Erro: Evento '{nome_evento}' está lotado.")
+            return False
+
+        # Cria o participante e inscreve
+        participante = Participante(nome, email)
+        evento.participantes.append(participante)
+        self.participantes.append(participante)
+        self.emails_inscritos.add(email)
+        print(f"{nome} foi inscrito com sucesso no evento '{nome_evento}'!")
+        return True
