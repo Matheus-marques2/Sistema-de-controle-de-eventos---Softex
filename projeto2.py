@@ -99,4 +99,103 @@ class SistemaEventos:
         self.participantes.append(participante)
         self.emails_inscritos.add(email)
         print(f"{nome} foi inscrito com sucesso no evento '{nome_evento}'!")
-        return True            
+        return True          
+
+    from datetime import datetime  # Importa a classe datetime para trabalhar com datas
+
+# CLASSE EVENTO
+class Evento:
+    def __init__(self, nome, data, local, capacidade_maxima, categoria, preco):
+        # Inicializa os atributos principais de um evento
+        self.nome = nome
+        # Converte a data de string (ex: "25/11/2025") para formato datetime
+        self.data = datetime.strptime(data, "%d/%m/%Y")
+        self.local = local
+        self.capacidade_maxima = capacidade_maxima
+        self.categoria = categoria
+        self.preco = preco
+        # Lista para armazenar os participantes inscritos neste evento
+        self.participantes = []
+
+    def validar_evento(self):
+        # Verifica se o evento possui uma data válida (futura)
+        if self.data < datetime.now():
+            raise ValueError("A data do evento não pode ser anterior à data atual.")
+        # Garante que a capacidade máxima seja positiva
+        if self.capacidade_maxima <= 0:
+            raise ValueError("A capacidade máxima deve ser um número positivo.")
+
+    def inscrever_participante(self, participante):
+        # Adiciona um participante ao evento, se houver vagas disponíveis
+        if len(self.participantes) < self.capacidade_maxima:
+            self.participantes.append(participante)
+            print(f"{participante.nome} foi inscrito no evento {self.nome}.")
+        else:
+            print("Evento lotado! Não é possível realizar novas inscrições.")
+
+    def cancelar_inscricao(self, email):
+        # Cancela a inscrição de um participante com base no e-mail
+        for p in self.participantes:
+            if p.email == email:
+                self.participantes.remove(p)
+                print(f"Inscrição de {p.nome} cancelada com sucesso.")
+                return
+        print("Participante não encontrado para cancelamento.")
+
+    def check_in(self, email):
+        # Marca a presença de um participante no evento
+        for p in self.participantes:
+            if p.email == email:
+                p.presente = True
+                print(f"{p.nome} realizou check-in com sucesso!")
+                return
+        print("Participante não encontrado para check-in.")
+
+# CLASSE PARTICIPANTE
+class Participante:
+    def __init__(self, nome, email):
+        # Inicializa os dados do participante
+        self.nome = nome
+        self.email = email
+        self.presente = False  # Indica se o participante fez check-in (False por padrão)
+
+# CLASSE SISTEMA DE EVENTOS
+class SistemaEventos:
+    def __init__(self):
+        # Cria uma lista para armazenar todos os eventos do sistema
+        self.eventos = []
+
+    def cadastrar_evento(self, evento):
+        # Valida o evento antes de adicioná-lo ao sistema
+        evento.validar_evento()
+        self.eventos.append(evento)
+        print(f"Evento '{evento.nome}' cadastrado com sucesso!")
+
+    def listar_eventos(self):
+        # Exibe todos os eventos cadastrados e suas principais informações
+        print("\n📋 Lista de Eventos:")
+        for e in self.eventos:
+            print(f"📅 {e.nome} - {e.data.strftime('%d/%m/%Y')} - {e.local} - {e.categoria} - R${e.preco}")
+        if not self.eventos:
+            print("Nenhum evento cadastrado ainda.")
+
+    def buscar_por_categoria(self, categoria):
+        # Mostra os eventos que pertencem à categoria informada
+        print(f"\n🔎 Eventos da categoria '{categoria}':")
+        encontrados = [e for e in self.eventos if e.categoria.lower() == categoria.lower()]
+        # Exibe resultados, se houver
+        for e in encontrados:
+            print(f"• {e.nome} em {e.data.strftime('%d/%m/%Y')} no {e.local}")
+        if not encontrados:
+            print("Nenhum evento encontrado nessa categoria.")
+
+    def buscar_por_data(self, data):
+        # Mostra os eventos que acontecem em uma data específica
+        data_busca = datetime.strptime(data, "%d/%m/%Y")
+        print(f"\n📅 Eventos na data {data}:")
+        encontrados = [e for e in self.eventos if e.data == data_busca]
+        for e in encontrados:
+            print(f"• {e.nome} - {e.local} ({e.categoria})")
+        if not encontrados:
+            print("Nenhum evento encontrado nessa data.")
+  
