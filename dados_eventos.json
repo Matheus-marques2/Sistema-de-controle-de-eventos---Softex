@@ -1,0 +1,26 @@
+{
+    "eventos": [
+        {
+            "tipo": "Evento",
+            "nome": "workshop python",
+            "data": "10/11/2025",
+            "local": "Rua amélia, 585",
+            "capacidade_max": 50,
+            "categoria": "tech",
+            "preco": 50.0,
+            "participantes": [],
+            "extra": null
+        },
+        {
+            "tipo": "Evento",
+            "nome": "workshop java",
+            "data": "10/12/2025",
+            "local": "rua jacarandá, 762",
+            "capacidade_max": 100,
+            "categoria": "tech",
+            "preco": 60.0,
+            "participantes": [],
+            "extra": null
+        }
+    ]
+}
